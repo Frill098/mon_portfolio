@@ -1,18 +1,21 @@
 *{
-    margin 0
-    padding 0
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
+
 body{
     font-family: Arial, sans-serif;
     line-height: 1.6;
 }
+
 header{
     background: #1B4F72;
     color: #FFF;
     padding: 2rem;
     text-align: center;
 }
+
 nav a{
     color: #FFF;
     margin: 0 1rem;
