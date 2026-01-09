@@ -7,4 +7,5 @@ Thumbs.db
 # Fichiers temporaires
 *.log
 *.tmp
+.kiro
 
