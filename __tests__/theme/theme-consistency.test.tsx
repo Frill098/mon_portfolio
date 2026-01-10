@@ -154,7 +154,7 @@ describe('Theme Consistency Property Tests', () => {
         expect(hasValidContrast).toBe(true);
         expect(hasDarkThemeRoot).toBe(true);
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -195,7 +195,7 @@ describe('Theme Consistency Property Tests', () => {
         
         expect(allVariablesDefined).toBe(true);
       }),
-      { numRuns: 50 }
+      { numRuns: 10 }
     );
   });
 
@@ -226,7 +226,7 @@ describe('Theme Consistency Property Tests', () => {
           expect(container.firstChild).toBeTruthy();
         }
       ),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 });

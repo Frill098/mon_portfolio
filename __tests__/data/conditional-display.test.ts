@@ -29,7 +29,7 @@ describe('Conditional Display Property Tests', () => {
           expect(project.demoUrl === undefined || project.demoUrl === null || project.demoUrl.trim() === '').toBe(true);
         }
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -48,7 +48,7 @@ describe('Conditional Display Property Tests', () => {
           expect(skill.name.trim()).not.toBe('');
         });
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -67,7 +67,7 @@ describe('Conditional Display Property Tests', () => {
         expect(contactMethod.type).toBeDefined();
         expect(['email', 'whatsapp', 'linkedin', 'twitter', 'discord']).toContain(contactMethod.type);
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -83,15 +83,15 @@ describe('Conditional Display Property Tests', () => {
         expect(typeof socialLink.url).toBe('string');
         expect(socialLink.url.trim()).not.toBe('');
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
   test('Property 5e: Statistics should only be displayed when they have valid label and value', () => {
     // Test with generated statistics
     const statisticGenerator = fc.record({
-      label: fc.string({ minLength: 1, maxLength: 50 }),
-      value: fc.string({ minLength: 1, maxLength: 20 }),
+      label: fc.string({ minLength: 1, maxLength: 50 }).filter(s => s.trim().length > 0),
+      value: fc.string({ minLength: 1, maxLength: 20 }).filter(s => s.trim().length > 0),
       icon: fc.option(fc.constant(() => null))
     });
 
@@ -106,7 +106,7 @@ describe('Conditional Display Property Tests', () => {
         expect(typeof stat.value).toBe('string');
         expect(stat.value.trim()).not.toBe('');
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 

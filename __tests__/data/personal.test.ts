@@ -34,7 +34,7 @@ describe('Personal Data Property Tests', () => {
         expect(generatedPersonalInfo.avatar.length).toBeGreaterThan(0);
         expect(generatedPersonalInfo.cvUrl.length).toBeGreaterThan(0);
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 

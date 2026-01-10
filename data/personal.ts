@@ -1,4 +1,4 @@
-import { PersonalInfo, Statistic } from '@/lib/types';
+import { PersonalInfo, Statistic, SocialLink } from '@/lib/types';
 
 export const personalInfo: PersonalInfo = {
   fullName: "Votre Nom",
@@ -7,6 +7,25 @@ export const personalInfo: PersonalInfo = {
   avatar: "/images/avatar.jpg",
   cvUrl: "/cv/cv.pdf"
 };
+
+export const socialLinks: SocialLink[] = [
+  {
+    platform: "github",
+    url: "https://github.com/votre-username"
+  },
+  {
+    platform: "linkedin",
+    url: "https://linkedin.com/in/votre-profil"
+  },
+  {
+    platform: "twitter",
+    url: "https://twitter.com/votre_handle"
+  },
+  {
+    platform: "discord",
+    url: "https://discord.com/users/votre_user_id"
+  }
+];
 
 export const aboutStats: Statistic[] = [
   {

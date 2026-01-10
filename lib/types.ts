@@ -11,7 +11,7 @@ export interface PersonalInfo {
 export interface SocialLink {
   platform: string;
   url: string;
-  icon: React.ComponentType;
+  icon?: React.ComponentType;
 }
 
 // Types pour les statistiques
@@ -50,7 +50,7 @@ export interface ContactMethod {
   type: 'email' | 'whatsapp' | 'linkedin' | 'twitter' | 'discord';
   value: string;
   url: string;
-  icon: React.ComponentType;
+  icon?: React.ComponentType;
 }
 
 // Types pour la navigation
@@ -65,6 +65,25 @@ export interface ThemeConfig {
   defaultTheme: 'dark' | 'light' | 'system';
   enableSystemTheme: boolean;
   storageKey: string;
+}
+
+// Types pour les expériences et formations
+export interface Experience {
+  id: string;
+  title: string;
+  organization: string;
+  location?: string;
+  startDate: string;
+  endDate?: string; // undefined si en cours
+  description: string;
+  type: 'education' | 'work' | 'internship' | 'project' | 'certification';
+  skills?: string[];
+  current?: boolean;
+}
+
+export interface ExperienceSection {
+  experiences: Experience[];
+  orderBy: 'chronological' | 'relevance';
 }
 
 // Types pour la configuration de l'application

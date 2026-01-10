@@ -1,16 +1,15 @@
 import * as React from "react";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  extends Omit<HTMLMotionProps<"button">, "whileHover" | "whileTap"> {
   variant?: "default" | "secondary" | "outline" | "ghost";
   size?: "default" | "sm" | "lg";
-  asChild?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "default", size = "default", asChild = false, ...props }, ref) => {
+  ({ className, variant = "default", size = "default", ...props }, ref) => {
     const baseClasses = cn(
       "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-400 disabled:pointer-events-none disabled:opacity-50",
       {
@@ -32,18 +31,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       },
       className
     );
-
-    if (asChild) {
-      return (
-        <motion.div
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className={baseClasses}
-          ref={ref}
-          {...props}
-        />
-      );
-    }
 
     return (
       <motion.button
