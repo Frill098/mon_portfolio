@@ -3,7 +3,6 @@ import { Inter, Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import Navigation from "@/components/layout/Navigation";
-import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -156,7 +155,6 @@ export default function RootLayout({
         >
           <Navigation />
           {children}
-          <PerformanceMonitor />
         </ThemeProvider>
       </body>
     </html>
