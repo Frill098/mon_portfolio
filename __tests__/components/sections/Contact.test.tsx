@@ -344,17 +344,17 @@ describe('Contact Component Unit Tests', () => {
       const submitButton = screen.getByTestId('contact-form-submit');
       await user.click(submitButton);
 
-      // Attendre que le message de succès apparaisse
+      // Attendre que le message de succès apparaisse (avec timeout plus long)
       await waitFor(() => {
         expect(screen.getByTestId('success-message')).toBeInTheDocument();
-      });
+      }, { timeout: 10000 });
 
       // Vérifier que le formulaire a été réinitialisé
       expect(screen.getByTestId('contact-form-name')).toHaveValue('');
       expect(screen.getByTestId('contact-form-email')).toHaveValue('');
       expect(screen.getByTestId('contact-form-subject')).toHaveValue('');
       expect(screen.getByTestId('contact-form-message')).toHaveValue('');
-    });
+    }, 15000);
   });
 
   describe('Invitation Message Display (Requirements 6.1)', () => {

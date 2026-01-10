@@ -51,7 +51,7 @@ export const contactFormConfig = {
       label: 'Email',
       placeholder: 'votre.email@exemple.com',
       required: true,
-      pattern: '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$'
+      pattern: '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+'
     },
     subject: {
       label: 'Sujet',

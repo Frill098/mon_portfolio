@@ -12,16 +12,19 @@ jest.mock('next/image', () => ({
   },
 }));
 
-// Mock framer-motion
+// Mock framer-motion to avoid prop warnings
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
-    h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
-    h2: ({ children, ...props }: any) => <h2 {...props}>{children}</h2>,
-    p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    ul: ({ children, ...props }: any) => <ul {...props}>{children}</ul>,
-    li: ({ children, ...props }: any) => <li {...props}>{children}</li>,
+    div: ({ children, whileInView, whileHover, whileTap, ...props }: any) => <div {...props}>{children}</div>,
+    section: ({ children, whileInView, whileHover, whileTap, ...props }: any) => <section {...props}>{children}</section>,
+    h1: ({ children, whileInView, whileHover, whileTap, ...props }: any) => <h1 {...props}>{children}</h1>,
+    h2: ({ children, whileInView, whileHover, whileTap, ...props }: any) => <h2 {...props}>{children}</h2>,
+    p: ({ children, whileInView, whileHover, whileTap, ...props }: any) => <p {...props}>{children}</p>,
+    ul: ({ children, whileInView, whileHover, whileTap, ...props }: any) => <ul {...props}>{children}</ul>,
+    li: ({ children, whileInView, whileHover, whileTap, ...props }: any) => <li {...props}>{children}</li>,
+    a: ({ children, whileInView, whileHover, whileTap, ...props }: any) => <a {...props}>{children}</a>,
+    button: ({ children, whileInView, whileHover, whileTap, ...props }: any) => <button {...props}>{children}</button>,
+    form: ({ children, whileInView, whileHover, whileTap, ...props }: any) => <form {...props}>{children}</form>,
   },
   AnimatePresence: ({ children }: any) => children,
 }));
