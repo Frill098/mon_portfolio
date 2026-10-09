@@ -1,12 +1,26 @@
 # Fichiers système
 .DS_Store
 Thumbs.db
+
 # Dossiers de l'éditeur
-node_modules
 .vscode/
 .idea/
+
+# Dépendances
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
 # Fichiers temporaires
 *.log
 *.tmp
-.kiro
+*.tsbuildinfo
 
+# Variables d'environnement
+.env*
+!.env.example
+
+# Kiro
+.kiro

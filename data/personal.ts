@@ -1,49 +1,27 @@
-import { PersonalInfo, Statistic, SocialLink } from '@/lib/types';
+import { PersonalInfo, SocialLink, Statistic } from '@/lib/types';
 
 export const personalInfo: PersonalInfo = {
-  fullName: "Votre Nom",
-  role: "Développeur Full Stack",
-  catchphrase: "Créateur d'expériences web modernes et performantes",
-  avatar: "/images/avatar.jpg",
-  cvUrl: "/cv/cv.pdf"
+  fullName: "Déo-Gratias DAGA",
+  role: "Tech Lead · Développeur Full Stack",
+  catchphrase: "Je conçois, je pilote, je livre — de l'idée au produit en production.",
+  avatar: "/images/Avatar.png",
+  cvUrl: "/cv/CV_Deo-Gratias_DAGA_Dev.pdf",
 };
 
 export const socialLinks: SocialLink[] = [
-  {
-    platform: "github",
-    url: "https://github.com/votre-username"
-  },
-  {
-    platform: "linkedin",
-    url: "https://linkedin.com/in/votre-profil"
-  },
-  {
-    platform: "twitter",
-    url: "https://twitter.com/votre_handle"
-  },
-  {
-    platform: "discord",
-    url: "https://discord.com/users/votre_user_id"
-  }
-];
-
-export const aboutStats: Statistic[] = [
-  {
-    label: "Années d'expérience",
-    value: "3+"
-  },
-  {
-    label: "Projets réalisés",
-    value: "15+"
-  },
-  {
-    label: "Technologies maîtrisées",
-    value: "10+"
-  }
+  { platform: "github",   url: "https://github.com/Frill098" },
+  { platform: "linkedin", url: "https://www.linkedin.com/in/d%C3%A9o-daga-837266378/" },
+  { platform: "discord",  url: "https://discord.com/users/kiritox_05" },
 ];
 
 export const biography = [
-  "Développeur passionné avec plus de 3 ans d'expérience dans le développement web moderne. Spécialisé dans les technologies JavaScript et les frameworks React/Next.js.",
-  "J'aime créer des applications web performantes, accessibles et avec une excellente expérience utilisateur. Mon approche combine créativité et rigueur technique.",
-  "Toujours en quête d'apprentissage, je reste à l'affût des dernières tendances et meilleures pratiques du développement web."
+  "Tech Lead orienté résultats, avec de l'expérience dans la conception, le pilotage et la livraison d'applications SaaS et web. Je fais le lien entre les besoins métier et l'exécution technique.",
+  "Maîtrise des méthodologies Agile/Scrum, de Laravel, React et du déploiement cloud. Passionné par l'architecture propre, les livraisons dans les délais et l'amélioration continue.",
+  "Basé à Abomey-Calavi, Bénin · Disponible pour des missions freelance et des collaborations à distance.",
+];
+
+export const aboutStats: Statistic[] = [
+  { label: "Applications livrées",    value: "5+" },
+  { label: "Technologies maîtrisées", value: "15+" },
+  { label: "Années d'expérience",     value: "2+" },
 ];

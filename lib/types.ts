@@ -1,4 +1,3 @@
-// Types pour les données personnelles
 export interface PersonalInfo {
   fullName: string;
   role: string;
@@ -7,21 +6,16 @@ export interface PersonalInfo {
   cvUrl: string;
 }
 
-// Types pour les liens de réseaux sociaux
 export interface SocialLink {
   platform: string;
   url: string;
-  icon?: React.ComponentType;
 }
 
-// Types pour les statistiques
 export interface Statistic {
   label: string;
   value: string;
-  icon?: React.ComponentType;
 }
 
-// Types pour les compétences
 export interface Skill {
   name: string;
   icon?: string;
@@ -33,7 +27,6 @@ export interface SkillCategory {
   skills: Skill[];
 }
 
-// Types pour les projets
 export interface Project {
   id: string;
   title: string;
@@ -45,57 +38,41 @@ export interface Project {
   featured: boolean;
 }
 
-// Types pour les méthodes de contact
 export interface ContactMethod {
   type: 'email' | 'whatsapp' | 'linkedin' | 'twitter' | 'discord';
   value: string;
   url: string;
-  icon?: React.ComponentType;
 }
 
-// Types pour la navigation
 export interface NavItem {
   id: string;
   label: string;
   href: string;
 }
 
-// Types pour la configuration du thème
-export interface ThemeConfig {
-  defaultTheme: 'dark' | 'light' | 'system';
-  enableSystemTheme: boolean;
-  storageKey: string;
-}
-
-// Types pour les expériences et formations
 export interface Experience {
   id: string;
   title: string;
   organization: string;
   location?: string;
   startDate: string;
-  endDate?: string; // undefined si en cours
+  endDate?: string;
   description: string;
   type: 'education' | 'work' | 'internship' | 'project' | 'certification';
   skills?: string[];
   current?: boolean;
 }
 
-export interface ExperienceSection {
-  experiences: Experience[];
-  orderBy: 'chronological' | 'relevance';
-}
-
-// Types pour la configuration de l'application
 export interface AppConfig {
   site: {
     name: string;
     description: string;
     url: string;
     author: string;
+    email: string;
+    ogImage: string;
   };
   navigation: NavItem[];
-  social: SocialLink[];
   seo: {
     keywords: string[];
     ogImage: string;

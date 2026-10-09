@@ -4,36 +4,31 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 47.4% 11.2%;
-    --radius: 0.5rem;
+    --background: 0 0% 98%;
+    --foreground: 240 10% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 4%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 262 83% 58%;
+    --radius: 0.375rem;
+
+    /* Accent violet */
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --background: 240 10% 4%;
+    --foreground: 0 0% 95%;
+    --card: 240 8% 7%;
+    --card-foreground: 0 0% 95%;
+    --border: 240 6% 14%;
+    --input: 240 6% 14%;
+    --ring: 262 60% 65%;
+
+    --accent: 262 60% 65%;
+    --accent-foreground: 240 10% 4%;
   }
 }
 
@@ -42,7 +37,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
@@ -51,20 +46,44 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Enhanced dark theme specific styles */
-.dark {
-  color-scheme: dark;
+/* Dot-grid background pattern for Hero */
+.bg-dot-pattern {
+  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
-/* Ensure proper contrast ratios for accessibility */
-.dark .text-muted-foreground {
-  color: hsl(215 20.2% 65.1%);
+/* Gradient text utility */
+.gradient-text {
+  @apply bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent;
 }
 
-.dark .bg-card {
-  background-color: hsl(217.2 32.6% 17.5%);
+/* Thin scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-zinc-100 dark:bg-zinc-900;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-300 dark:bg-zinc-700 rounded-full;
 }
 
-.dark .border-border {
-  border-color: hsl(217.2 32.6% 17.5%);
+/* ── View Transitions — theme toggle animation ─────────────────── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
+
+.light-transition::view-transition-old(root) { z-index: 1; }
+.light-transition::view-transition-new(root) { z-index: 9999; }
+
+.dark-transition::view-transition-old(root)  { z-index: 9999; }
+.dark-transition::view-transition-new(root)  { z-index: 1; }
+
+/* Empêcher le flash blanc pendant la transition */
+:root                        { background-color: #09090b; }
+html.dark, html.dark body    { background-color: #09090b; }
+html:not(.dark),
+html:not(.dark) body         { background-color: #fafafa; }
+::view-transition-image-pair(root) { isolation: auto; }

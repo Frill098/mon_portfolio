@@ -1,88 +1,60 @@
-'use client';
-
-import { APP_CONFIG } from '@/lib/constants';
-import { contactMethods } from '@/data/contact';
+import { APP_CONFIG } from "@/lib/constants";
+import { socialLinks } from "@/data/personal";
+import { SocialIcon } from "@/components/ui/SocialIcon";
+import { Separator } from "@/components/ui/Separator";
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-  
-  // Filtrer les liens de réseaux sociaux principaux pour le footer
-  const socialLinks = contactMethods.filter(method => 
-    ['linkedin', 'twitter', 'discord'].includes(method.type)
-  );
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-900 border-t border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          {/* Section Copyright */}
+    <footer className="bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+
+          {/* Brand */}
           <div className="text-center md:text-left">
-            <h3 className="text-lg font-semibold text-white mb-2">
-              {APP_CONFIG.site.author}
-            </h3>
-            <p className="text-gray-400 text-sm">
-              © {currentYear} {APP_CONFIG.site.author}. Tous droits réservés.
+            <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">
+              DG<span className="text-violet-500">.</span>DAGA
+            </p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+              © {year} {APP_CONFIG.site.author}. Tous droits réservés.
             </p>
           </div>
 
-          {/* Section Stack Technique */}
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-white mb-2">
-              Stack Technique
-            </h3>
-            <div className="flex flex-wrap justify-center gap-2">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900 text-blue-200">
-                Next.js 15
+          {/* Stack badges */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {["Next.js 15", "TypeScript", "Tailwind CSS", "Framer Motion"].map((tech) => (
+              <span
+                key={tech}
+                className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400"
+              >
+                {tech}
               </span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-900 text-cyan-200">
-                Tailwind CSS
-              </span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900 text-blue-200">
-                TypeScript
-              </span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-900 text-purple-200">
-                Framer Motion
-              </span>
-            </div>
+            ))}
           </div>
 
-          {/* Section Liens Sociaux */}
-          <div className="text-center md:text-right">
-            <h3 className="text-lg font-semibold text-white mb-2">
-              Suivez-moi
-            </h3>
-            <div className="flex justify-center md:justify-end space-x-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.type}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
-                  aria-label={`Suivre sur ${social.type}`}
-                >
-                  {/* Icône temporaire - sera remplacée par les vraies icônes */}
-                  <div className="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-bold text-white">
-                      {social.type.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                </a>
-              ))}
-            </div>
-            <p className="text-gray-400 text-sm mt-2">
-              Connectons-nous !
-            </p>
+          {/* Social links */}
+          <div className="flex items-center gap-3">
+            {socialLinks.map((link) => (
+              <a
+                key={link.platform}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Profil ${link.platform}`}
+                className="p-2 rounded-md text-zinc-500 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              >
+                <SocialIcon platform={link.platform} className="w-4 h-4" />
+              </a>
+            ))}
           </div>
         </div>
 
-        {/* Ligne de séparation et message final */}
-        <div className="mt-8 pt-6 border-t border-gray-700">
-          <p className="text-center text-gray-400 text-sm">
-            Développé avec ❤️ en utilisant les dernières technologies web
-          </p>
-        </div>
+        <Separator className="my-6" />
+
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 text-center">
+          © {new Date().getFullYear()} Déo-Gratias DAGA — Tous droits réservés - Cotonou, Bénin
+        </p>
       </div>
     </footer>
   );

@@ -1,22 +1,21 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { ContactMethod } from '@/lib/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Send, CheckCircle, AlertCircle } from "lucide-react";
+import { ContactMethod } from "@/lib/types";
+import { Button } from "@/components/ui/Button";
+import { SocialIcon } from "@/components/ui/SocialIcon";
+import { SPRING_EASE } from "@/lib/constants";
 
 interface ContactProps {
-  invitation: {
-    title: string;
-    message: string;
-    callToAction: string;
-  };
+  invitation: { title: string; message: string; callToAction: string };
   contactMethods: ContactMethod[];
   formConfig?: {
     enabled: boolean;
     fields: {
-      name: { label: string; placeholder: string; required: boolean; minLength: number; maxLength: number };
-      email: { label: string; placeholder: string; required: boolean; pattern: string };
+      name:    { label: string; placeholder: string; required: boolean; minLength: number; maxLength: number };
+      email:   { label: string; placeholder: string; required: boolean; pattern: string };
       subject: { label: string; placeholder: string; required: boolean; minLength: number; maxLength: number };
       message: { label: string; placeholder: string; required: boolean; minLength: number; maxLength: number };
     };
@@ -26,323 +25,247 @@ interface ContactProps {
   };
 }
 
-interface FormData {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
+interface FormData { name: string; email: string; subject: string; message: string }
+interface FormErrors { name?: string; email?: string; subject?: string; message?: string }
 
-interface FormErrors {
-  name?: string;
-  email?: string;
-  subject?: string;
-  message?: string;
-}
+const SPRING = { ease: SPRING_EASE, duration: 0.7 };
+
+const container = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: SPRING },
+};
+
+const methodLabel: Record<ContactMethod["type"], string> = {
+  email:    "Email",
+  whatsapp: "WhatsApp",
+  linkedin: "LinkedIn",
+  twitter:  "Twitter",
+  discord:  "Discord",
+};
 
 export default function Contact({ invitation, contactMethods, formConfig }: ContactProps) {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [formData, setFormData]   = useState<FormData>({ name: "", email: "", subject: "", message: "" });
+  const [errors, setErrors]       = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" as const }
-    }
-  };
-
-  // Validation du formulaire (Exigence 6.3)
-  const validateForm = (): boolean => {
+  const validate = (): boolean => {
     if (!formConfig) return false;
-    
-    const newErrors: FormErrors = {};
-    
-    // Validation du nom
-    if (!formData.name.trim()) {
-      newErrors.name = 'Le nom est requis';
-    } else if (formData.name.trim().length < formConfig.fields.name.minLength) {
-      newErrors.name = `Le nom doit contenir au moins ${formConfig.fields.name.minLength} caractères`;
-    } else if (formData.name.trim().length > formConfig.fields.name.maxLength) {
-      newErrors.name = `Le nom ne peut pas dépasser ${formConfig.fields.name.maxLength} caractères`;
-    }
+    const e: FormErrors = {};
+    const { name, email, subject, message } = formData;
+    const f = formConfig.fields;
 
-    // Validation de l'email
-    if (!formData.email.trim()) {
-      newErrors.email = 'L\'email est requis';
-    } else if (!new RegExp(formConfig.fields.email.pattern).test(formData.email.trim())) {
-      newErrors.email = 'Veuillez entrer un email valide';
-    }
+    if (!name.trim())                                              e.name    = "Le nom est requis";
+    else if (name.trim().length < f.name.minLength)               e.name    = `Au moins ${f.name.minLength} caractères`;
 
-    // Validation du sujet
-    if (!formData.subject.trim()) {
-      newErrors.subject = 'Le sujet est requis';
-    } else if (formData.subject.trim().length < formConfig.fields.subject.minLength) {
-      newErrors.subject = `Le sujet doit contenir au moins ${formConfig.fields.subject.minLength} caractères`;
-    } else if (formData.subject.trim().length > formConfig.fields.subject.maxLength) {
-      newErrors.subject = `Le sujet ne peut pas dépasser ${formConfig.fields.subject.maxLength} caractères`;
-    }
+    if (!email.trim())                                             e.email   = "L'email est requis";
+    else if (!new RegExp(f.email.pattern).test(email.trim()))     e.email   = "Email invalide";
 
-    // Validation du message
-    if (!formData.message.trim()) {
-      newErrors.message = 'Le message est requis';
-    } else if (formData.message.trim().length < formConfig.fields.message.minLength) {
-      newErrors.message = `Le message doit contenir au moins ${formConfig.fields.message.minLength} caractères`;
-    } else if (formData.message.trim().length > formConfig.fields.message.maxLength) {
-      newErrors.message = `Le message ne peut pas dépasser ${formConfig.fields.message.maxLength} caractères`;
-    }
+    if (!subject.trim())                                           e.subject = "Le sujet est requis";
+    else if (subject.trim().length < f.subject.minLength)         e.subject = `Au moins ${f.subject.minLength} caractères`;
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (!message.trim())                                           e.message = "Le message est requis";
+    else if (message.trim().length < f.message.minLength)         e.message = `Au moins ${f.message.minLength} caractères`;
+
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    // Effacer l'erreur du champ modifié
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
-    }
+  const handleChange = (field: keyof FormData, value: string) => {
+    setFormData((p) => ({ ...p, [field]: value }));
+    if (errors[field]) setErrors((p) => ({ ...p, [field]: undefined }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
-
+    if (!validate()) return;
     setIsSubmitting(true);
-    setSubmitStatus('idle');
-
+    setSubmitStatus("idle");
     try {
-      // Simulation d'envoi de formulaire
-      // Dans une vraie application, ceci ferait un appel API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error();
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", subject: "", message: "" });
     } catch {
-      setSubmitStatus('error');
+      setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Icônes pour les plateformes (simplifiées pour le moment)
-  const getContactIcon = (type: ContactMethod['type']) => {
-    const iconClass = "w-6 h-6";
-    switch (type) {
-      case 'whatsapp':
-        return <div className={`${iconClass} bg-green-500 rounded`} data-testid={`${type}-icon`}></div>;
-      case 'linkedin':
-        return <div className={`${iconClass} bg-blue-600 rounded`} data-testid={`${type}-icon`}></div>;
-      case 'twitter':
-        return <div className={`${iconClass} bg-blue-400 rounded`} data-testid={`${type}-icon`}></div>;
-      case 'discord':
-        return <div className={`${iconClass} bg-indigo-500 rounded`} data-testid={`${type}-icon`}></div>;
-      case 'email':
-        return <div className={`${iconClass} bg-red-500 rounded`} data-testid={`${type}-icon`}></div>;
-      default:
-        return <div className={`${iconClass} bg-gray-500 rounded`} data-testid={`${type}-icon`}></div>;
-    }
-  };
+  const inputCls =
+    "w-full px-4 py-2.5 rounded-md border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors";
 
   return (
-    <section id="contact" className="py-20 bg-gray-800">
-      <div className="container mx-auto px-4">
+    <section id="contact" className="py-28 bg-white dark:bg-zinc-950">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          variants={containerVariants}
+          variants={container}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-6xl mx-auto"
+          viewport={{ once: true, margin: "-80px" }}
         >
-          {/* Titre de section */}
-          <motion.div variants={itemVariants} className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-100 mb-4">Contact</h2>
-            <div className="w-20 h-1 bg-blue-400 mx-auto"></div>
-          </motion.div>
-
-          {/* Message d'invitation (Exigence 6.1) */}
-          <motion.div variants={itemVariants} className="text-center mb-16">
-            <h3 className="text-3xl font-semibold text-gray-100 mb-6" data-testid="invitation-title">
-              {invitation.title}
-            </h3>
-            <p className="text-xl text-gray-300 leading-relaxed mb-6 max-w-4xl mx-auto" data-testid="invitation-message">
-              {invitation.message}
+          {/* Header */}
+          <motion.div variants={item} className="mb-16">
+            <p className="text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-3">
+              Contact
             </p>
-            <p className="text-lg text-gray-400" data-testid="invitation-cta">
-              {invitation.callToAction}
+            <h2 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              {invitation.title}
+            </h2>
+            <p className="mt-4 text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed">
+              {invitation.message}
             </p>
           </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-12">
-            {/* Liens de contact directs (Exigence 6.2) */}
-            <motion.div variants={itemVariants}>
-              <h4 className="text-2xl font-semibold text-gray-100 mb-8">Contactez-moi directement</h4>
-              <div className="space-y-4" data-testid="contact-methods">
-                {contactMethods.map((method, index) => (
-                  <motion.a
-                    key={index}
-                    href={method.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-4 p-4 bg-gray-900 rounded-lg border border-gray-700 hover:border-blue-400 transition-all duration-300 hover:scale-105"
-                    whileHover={{ x: 5 }}
-                    data-testid={`contact-link-${method.type}`}
-                  >
-                    {getContactIcon(method.type)}
-                    <div>
-                      <div className="text-gray-100 font-medium capitalize">
-                        {method.type === 'whatsapp' ? 'WhatsApp' : 
-                         method.type === 'linkedin' ? 'LinkedIn' : 
-                         method.type === 'twitter' ? 'Twitter' : 
-                         method.type === 'discord' ? 'Discord' : 
-                         method.type === 'email' ? 'Email' : method.type}
-                      </div>
-                      <div className="text-gray-400 text-sm">
-                        {method.value}
-                      </div>
-                    </div>
-                  </motion.a>
-                ))}
-              </div>
+            {/* Direct contact links */}
+            <motion.div variants={item} className="space-y-4">
+              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-6">
+                {invitation.callToAction}
+              </p>
+              {contactMethods.map((method) => (
+                <a
+                  key={method.type}
+                  href={method.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Me contacter via ${methodLabel[method.type]}`}
+                  className="flex items-center gap-4 p-4 rounded-md border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 hover:border-violet-400/60 dark:hover:border-violet-500/40 hover:bg-white dark:hover:bg-zinc-800/60 hover:translate-x-1 transition-all duration-200 group"
+                >
+                  <div className="p-2.5 rounded-md border border-zinc-200 dark:border-zinc-700 text-violet-600 dark:text-violet-400 group-hover:border-violet-400 group-hover:bg-violet-50 dark:group-hover:bg-violet-900/20 transition-colors">
+                    <SocialIcon platform={method.type} className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                      {methodLabel[method.type]}
+                    </p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                      {method.value}
+                    </p>
+                  </div>
+                </a>
+              ))}
             </motion.div>
 
-            {/* Formulaire de contact (Exigence 6.3) */}
+            {/* Contact form */}
             {formConfig?.enabled && (
-              <motion.div variants={itemVariants}>
-                <Card className="bg-gray-900 border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-gray-100">Envoyez-moi un message</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-6" data-testid="contact-form">
-                      {/* Champ Nom */}
-                      <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                          {formConfig.fields.name.label}
-                        </label>
-                        <input
-                          type="text"
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          placeholder={formConfig.fields.name.placeholder}
-                          className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                          data-testid="contact-form-name"
-                        />
-                        {errors.name && (
-                          <p className="mt-1 text-sm text-red-400" data-testid="name-error">
-                            {errors.name}
-                          </p>
-                        )}
-                      </div>
+              <motion.div variants={item}>
+                <div className="rounded-md border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-6">
+                  <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-6">
+                    Envoyez-moi un message
+                  </h3>
+                  <form onSubmit={handleSubmit} className="space-y-4" noValidate>
 
-                      {/* Champ Email */}
-                      <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                          {formConfig.fields.email.label}
-                        </label>
-                        <input
-                          type="email"
-                          id="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          placeholder={formConfig.fields.email.placeholder}
-                          className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                          data-testid="contact-form-email"
-                        />
-                        {errors.email && (
-                          <p className="mt-1 text-sm text-red-400" data-testid="email-error">
-                            {errors.email}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Champ Sujet */}
-                      <div>
-                        <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2">
-                          {formConfig.fields.subject.label}
-                        </label>
-                        <input
-                          type="text"
-                          id="subject"
-                          value={formData.subject}
-                          onChange={(e) => handleInputChange('subject', e.target.value)}
-                          placeholder={formConfig.fields.subject.placeholder}
-                          className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                          data-testid="contact-form-subject"
-                        />
-                        {errors.subject && (
-                          <p className="mt-1 text-sm text-red-400" data-testid="subject-error">
-                            {errors.subject}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Champ Message */}
-                      <div>
-                        <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                          {formConfig.fields.message.label}
-                        </label>
-                        <textarea
-                          id="message"
-                          rows={6}
-                          value={formData.message}
-                          onChange={(e) => handleInputChange('message', e.target.value)}
-                          placeholder={formConfig.fields.message.placeholder}
-                          className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-vertical"
-                          data-testid="contact-form-message"
-                        />
-                        {errors.message && (
-                          <p className="mt-1 text-sm text-red-400" data-testid="message-error">
-                            {errors.message}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Messages de statut */}
-                      {submitStatus === 'success' && (
-                        <div className="p-4 bg-green-900 border border-green-700 rounded-lg" data-testid="success-message">
-                          <p className="text-green-300">{formConfig.successMessage}</p>
-                        </div>
+                    {/* Name */}
+                    <div>
+                      <label htmlFor="contact-name" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
+                        {formConfig.fields.name.label}
+                      </label>
+                      <input
+                        id="contact-name"
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => handleChange("name", e.target.value)}
+                        placeholder={formConfig.fields.name.placeholder}
+                        aria-invalid={!!errors.name}
+                        aria-describedby={errors.name ? "name-error" : undefined}
+                        className={inputCls}
+                      />
+                      {errors.name && (
+                        <p id="name-error" className="mt-1 text-xs text-red-500">{errors.name}</p>
                       )}
+                    </div>
 
-                      {submitStatus === 'error' && (
-                        <div className="p-4 bg-red-900 border border-red-700 rounded-lg" data-testid="error-message">
-                          <p className="text-red-300">{formConfig.errorMessage}</p>
-                        </div>
+                    {/* Email */}
+                    <div>
+                      <label htmlFor="contact-email" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
+                        {formConfig.fields.email.label}
+                      </label>
+                      <input
+                        id="contact-email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleChange("email", e.target.value)}
+                        placeholder={formConfig.fields.email.placeholder}
+                        aria-invalid={!!errors.email}
+                        aria-describedby={errors.email ? "email-error" : undefined}
+                        className={inputCls}
+                      />
+                      {errors.email && (
+                        <p id="email-error" className="mt-1 text-xs text-red-500">{errors.email}</p>
                       )}
+                    </div>
 
-                      {/* Bouton de soumission */}
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                        data-testid="contact-form-submit"
-                      >
-                        {isSubmitting ? 'Envoi en cours...' : formConfig.submitText}
-                      </button>
-                    </form>
-                  </CardContent>
-                </Card>
+                    {/* Subject */}
+                    <div>
+                      <label htmlFor="contact-subject" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
+                        {formConfig.fields.subject.label}
+                      </label>
+                      <input
+                        id="contact-subject"
+                        type="text"
+                        value={formData.subject}
+                        onChange={(e) => handleChange("subject", e.target.value)}
+                        placeholder={formConfig.fields.subject.placeholder}
+                        aria-invalid={!!errors.subject}
+                        aria-describedby={errors.subject ? "subject-error" : undefined}
+                        className={inputCls}
+                      />
+                      {errors.subject && (
+                        <p id="subject-error" className="mt-1 text-xs text-red-500">{errors.subject}</p>
+                      )}
+                    </div>
+
+                    {/* Message */}
+                    <div>
+                      <label htmlFor="contact-message" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
+                        {formConfig.fields.message.label}
+                      </label>
+                      <textarea
+                        id="contact-message"
+                        rows={5}
+                        value={formData.message}
+                        onChange={(e) => handleChange("message", e.target.value)}
+                        placeholder={formConfig.fields.message.placeholder}
+                        aria-invalid={!!errors.message}
+                        aria-describedby={errors.message ? "message-error" : undefined}
+                        className={`${inputCls} resize-none`}
+                      />
+                      {errors.message && (
+                        <p id="message-error" className="mt-1 text-xs text-red-500">{errors.message}</p>
+                      )}
+                    </div>
+
+                    {/* Status messages */}
+                    {submitStatus === "success" && (
+                      <div className="flex items-center gap-2 p-3 rounded-md bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 text-sm">
+                        <CheckCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
+                        {formConfig.successMessage}
+                      </div>
+                    )}
+                    {submitStatus === "error" && (
+                      <div className="flex items-center gap-2 p-3 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm">
+                        <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
+                        {formConfig.errorMessage}
+                      </div>
+                    )}
+
+                    <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
+                      <Send className="w-4 h-4" aria-hidden="true" />
+                      {isSubmitting ? "Envoi en cours…" : formConfig.submitText}
+                    </Button>
+                  </form>
+                </div>
               </motion.div>
             )}
           </div>

@@ -1,187 +1,152 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Experience } from '@/lib/types';
-import { sortExperiencesByDate, sortExperiencesByRelevance } from '@/data/experience';
+import { motion } from "framer-motion";
+import {
+  Briefcase,
+  GraduationCap,
+  FolderKanban,
+  Award,
+  Rocket,
+} from "lucide-react";
+import { Experience } from "@/lib/types";
+import { sortExperiencesByDate, sortExperiencesByRelevance, formatDate } from "@/lib/utils";
+import { Badge } from "@/components/ui/Badge";
+import { SPRING_EASE } from "@/lib/constants";
 
 interface ExperienceProps {
   experiences: Experience[];
-  orderBy?: 'chronological' | 'relevance';
+  orderBy?: "chronological" | "relevance";
 }
 
-export default function ExperienceSection({ experiences, orderBy = 'chronological' }: ExperienceProps) {
-  // Trier les expériences selon l'ordre spécifié (Exigence 5.5)
-  const sortedExperiences = orderBy === 'chronological' 
-    ? sortExperiencesByDate(experiences)
-    : sortExperiencesByRelevance(experiences);
+const SPRING = { ease: SPRING_EASE, duration: 0.7 };
 
-  // Filtrer les expériences pour n'afficher que celles qui ont du contenu (Exigence 5.2, 5.4)
-  const validExperiences = sortedExperiences.filter(exp => 
-    exp.title && exp.organization && exp.description
-  );
+const container = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+};
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
+const item = {
+  hidden: { opacity: 0, x: -24 },
+  visible: { opacity: 1, x: 0, transition: SPRING },
+};
 
-  const itemVariants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.6, ease: "easeOut" as const }
-    }
-  };
-
-  const timelineVariants = {
-    hidden: { scaleY: 0 },
-    visible: {
-      scaleY: 1,
-      transition: { duration: 1, ease: "easeOut" as const }
-    }
-  };
-
-  // Fonction pour formater les dates
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', { 
-      year: 'numeric', 
-      month: 'short' 
-    });
-  };
-
-  // Fonction pour obtenir l'icône selon le type d'expérience
-  const getTypeIcon = (type: Experience['type']) => {
-    switch (type) {
-      case 'education':
-        return '🎓';
-      case 'work':
-        return '💼';
-      case 'internship':
-        return '🚀';
-      case 'project':
-        return '🛠️';
-      case 'certification':
-        return '📜';
-      default:
-        return '📋';
-    }
-  };
-
-  // Fonction pour obtenir le label du type
-  const getTypeLabel = (type: Experience['type']) => {
-    switch (type) {
-      case 'education':
-        return 'Formation';
-      case 'work':
-        return 'Expérience';
-      case 'internship':
-        return 'Stage';
-      case 'project':
-        return 'Projet';
-      case 'certification':
-        return 'Certification';
-      default:
-        return 'Autre';
-    }
-  };
-
-  if (validExperiences.length === 0) {
-    return null; // N'afficher rien si aucune expérience valide
+function TypeIcon({ type }: { type: Experience["type"] }) {
+  const cls = "w-4 h-4";
+  switch (type) {
+    case "education":     return <GraduationCap className={cls} aria-hidden="true" />;
+    case "work":          return <Briefcase      className={cls} aria-hidden="true" />;
+    case "internship":    return <Rocket         className={cls} aria-hidden="true" />;
+    case "project":       return <FolderKanban   className={cls} aria-hidden="true" />;
+    case "certification": return <Award          className={cls} aria-hidden="true" />;
+    default:              return <Briefcase      className={cls} aria-hidden="true" />;
   }
+}
+
+const TYPE_LABEL: Record<Experience["type"], string> = {
+  education:     "Formation",
+  work:          "Expérience",
+  internship:    "Stage",
+  project:       "Projet",
+  certification: "Certification",
+};
+
+export default function ExperienceSection({
+  experiences,
+  orderBy = "chronological",
+}: ExperienceProps) {
+  const sorted =
+    orderBy === "chronological"
+      ? sortExperiencesByDate(experiences)
+      : sortExperiencesByRelevance(experiences);
+
+  const valid = sorted.filter((e) => e.title && e.organization && e.description);
+
+  if (!valid.length) return null;
 
   return (
-    <section id="experience" className="py-20 bg-gray-800">
-      <div className="container mx-auto px-4">
+    <section id="experience" className="py-28 bg-zinc-50 dark:bg-zinc-950">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          variants={containerVariants}
+          variants={container}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-4xl mx-auto"
+          viewport={{ once: true, margin: "-80px" }}
         >
-          {/* Titre de section */}
-          <motion.div variants={itemVariants} className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-100 mb-4">Expérience & Formation</h2>
-            <div className="w-20 h-1 bg-blue-400 mx-auto"></div>
+          {/* Header */}
+          <motion.div variants={item} className="mb-16">
+            <p className="text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-3">
+              Parcours
+            </p>
+            <h2 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              Expérience & Formation
+            </h2>
           </motion.div>
 
           {/* Timeline */}
-          <div className="relative">
-            {/* Ligne de timeline */}
-            <motion.div
-              variants={timelineVariants}
-              className="absolute left-8 top-0 bottom-0 w-0.5 bg-blue-400 origin-top"
-              style={{ transformOrigin: 'top' }}
+          <div className="relative max-w-3xl">
+            {/* Vertical line */}
+            <div
+              className="absolute left-[23px] top-0 bottom-0 w-px bg-zinc-200 dark:bg-zinc-800"
+              aria-hidden="true"
             />
 
-            {/* Expériences */}
-            <div className="space-y-12" data-testid="experience-timeline">
-              {validExperiences.map((experience) => (
+            <div className="space-y-10">
+              {valid.map((exp) => (
                 <motion.div
-                  key={experience.id}
-                  variants={itemVariants}
-                  className="relative flex items-start space-x-8"
-                  data-testid="experience-item"
+                  key={exp.id}
+                  variants={item}
+                  className="relative flex gap-6"
                 >
-                  {/* Point de timeline */}
-                  <div className="relative z-10 flex-shrink-0">
-                    <div className="w-16 h-16 bg-blue-400 rounded-full flex items-center justify-center text-2xl">
-                      {getTypeIcon(experience.type)}
-                    </div>
+                  {/* Icon dot */}
+                  <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex items-center justify-center text-violet-600 dark:text-violet-400 shadow-sm">
+                    <TypeIcon type={exp.type} />
                   </div>
 
-                  {/* Contenu de l'expérience */}
-                  <div className="flex-1 bg-gray-900 rounded-lg p-6 border border-gray-700 hover:border-blue-400 transition-colors duration-300">
-                    {/* En-tête */}
-                    <div className="flex flex-wrap items-start justify-between mb-4">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-xl font-semibold text-gray-100 mb-1" data-testid="experience-title">
-                          {experience.title}
+                  {/* Card */}
+                  <div className="flex-1 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 hover:border-violet-400/60 dark:hover:border-violet-500/40 transition-colors">
+                    <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
+                      <div>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 leading-snug">
+                          {exp.title}
                         </h3>
-                        <p className="text-blue-400 font-medium mb-1" data-testid="experience-organization">
-                          {experience.organization}
+                        <p className="text-sm text-violet-600 dark:text-violet-400 font-medium mt-0.5">
+                          {exp.organization}
                         </p>
-                        {experience.location && (
-                          <p className="text-gray-400 text-sm" data-testid="experience-location">
-                            📍 {experience.location}
+                        {exp.location && (
+                          <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-0.5">
+                            📍 {exp.location}
                           </p>
                         )}
                       </div>
-                      
-                      <div className="flex flex-col items-end space-y-2">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-400/10 text-blue-400 border border-blue-400/20">
-                          {getTypeLabel(experience.type)}
-                        </span>
-                        <div className="text-gray-400 text-sm text-right" data-testid="experience-dates">
-                          {formatDate(experience.startDate)} - {experience.endDate ? formatDate(experience.endDate) : 'Présent'}
-                          {experience.current && (
-                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-400/10 text-green-400">
-                              En cours
+                      <div className="flex flex-col items-end gap-1.5">
+                        <Badge variant="outline" className="text-[10px] px-2 py-0.5">
+                          {TYPE_LABEL[exp.type]}
+                        </Badge>
+                        <span className="text-xs text-zinc-400 dark:text-zinc-500 whitespace-nowrap">
+                          {formatDate(exp.startDate)} —{" "}
+                          {exp.current ? (
+                            <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                              Présent
                             </span>
+                          ) : exp.endDate ? (
+                            formatDate(exp.endDate)
+                          ) : (
+                            "Présent"
                           )}
-                        </div>
+                        </span>
                       </div>
                     </div>
 
-                    {/* Description */}
-                    <p className="text-gray-300 leading-relaxed mb-4" data-testid="experience-description">
-                      {experience.description}
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                      {exp.description}
                     </p>
 
-                    {/* Compétences */}
-                    {experience.skills && experience.skills.length > 0 && (
-                      <div className="flex flex-wrap gap-2" data-testid="experience-skills">
-                        {experience.skills.map((skill, skillIndex) => (
+                    {exp.skills && exp.skills.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {exp.skills.map((skill) => (
                           <span
-                            key={skillIndex}
-                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-700 text-gray-300 border border-gray-600"
+                            key={skill}
+                            className="px-2 py-0.5 rounded text-[11px] font-medium border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
                           >
                             {skill}
                           </span>

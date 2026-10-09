@@ -1,29 +1,26 @@
 import * as React from "react";
-import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export interface BadgeProps
-  extends Omit<HTMLMotionProps<"div">, "initial" | "animate" | "transition" | "whileHover"> {
-  variant?: "default" | "secondary" | "destructive" | "outline";
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "secondary" | "outline" | "success" | "warning";
 }
 
 function Badge({ className, variant = "default", ...props }: BadgeProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.2 }}
-      whileHover={{ scale: 1.05 }}
+    <div
       className={cn(
-        "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2",
+        "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors",
         {
-          "border-transparent bg-gray-900 text-gray-50 shadow hover:bg-gray-800 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-200":
+          "border-transparent bg-violet-600 text-white shadow dark:bg-violet-500":
             variant === "default",
-          "border-transparent bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700":
+          "border-transparent bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100":
             variant === "secondary",
-          "border-transparent bg-red-500 text-gray-50 shadow hover:bg-red-600 dark:bg-red-900 dark:text-gray-50 dark:hover:bg-red-800":
-            variant === "destructive",
-          "text-gray-950 dark:text-gray-50": variant === "outline",
+          "border-zinc-300 text-zinc-700 dark:border-zinc-700 dark:text-zinc-300":
+            variant === "outline",
+          "border-transparent bg-emerald-500/20 text-emerald-700 dark:text-emerald-400":
+            variant === "success",
+          "border-transparent bg-amber-500/20 text-amber-700 dark:text-amber-400":
+            variant === "warning",
         },
         className
       )}
