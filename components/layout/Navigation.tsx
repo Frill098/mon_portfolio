@@ -117,7 +117,7 @@ export default function Navigation() {
       className={[
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         mounted && scrolled
-          ? 'bg-zinc-50/90 dark:bg-zinc-950/90 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 shadow-sm'
+          ? 'bg-zinc-50/90 dark:bg-zinc-950/90 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 shadow-xs'
           : 'bg-transparent',
       ].join(' ')}
     >

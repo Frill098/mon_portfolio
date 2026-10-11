@@ -71,7 +71,7 @@ export default function About({ biography, stats, personalInfo }: AboutProps) {
               <button
                 onClick={() => setLightboxOpen(true)}
                 aria-label="Voir la photo en taille réelle"
-                className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-violet-500/30 shadow-xl hover:border-violet-500/60 hover:scale-105 transition-all duration-300 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+                className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-violet-500/30 shadow-xl hover:border-violet-500/60 hover:scale-105 transition-all duration-300 cursor-zoom-in focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-violet-500"
               >
                 <Image
                   src={personalInfo.avatar}
@@ -126,7 +126,7 @@ export default function About({ biography, stats, personalInfo }: AboutProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-9999 flex items-center justify-center bg-black/80 backdrop-blur-xs p-4"
             onClick={close}
           >
             {/* Close button */}

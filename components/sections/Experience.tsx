@@ -98,7 +98,7 @@ export default function ExperienceSection({
                   className="relative flex gap-6"
                 >
                   {/* Icon dot */}
-                  <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex items-center justify-center text-violet-600 dark:text-violet-400 shadow-sm">
+                  <div className="relative z-10 shrink-0 w-12 h-12 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex items-center justify-center text-violet-600 dark:text-violet-400 shadow-xs">
                     <TypeIcon type={exp.type} />
                   </div>
 

@@ -11,7 +11,7 @@ function Badge({ className, variant = "default", ...props }: BadgeProps) {
       className={cn(
         "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors",
         {
-          "border-transparent bg-violet-600 text-white shadow dark:bg-violet-500":
+          "border-transparent bg-violet-600 text-white shadow-sm dark:bg-violet-500":
             variant === "default",
           "border-transparent bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100":
             variant === "secondary",

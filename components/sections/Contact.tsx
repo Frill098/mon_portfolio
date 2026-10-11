@@ -111,7 +111,7 @@ export default function Contact({ invitation, contactMethods, formConfig }: Cont
   };
 
   const inputCls =
-    "w-full px-4 py-2.5 rounded-md border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors";
+    "w-full px-4 py-2.5 rounded-md border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 text-sm focus:outline-hidden focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors";
 
   return (
     <section id="contact" className="py-28 bg-white dark:bg-zinc-950">

@@ -213,7 +213,7 @@ export default function Hero({ personalInfo, socialLinks }: HeroProps) {
       {/* ── Bottom fade overlay ── */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none bg-gradient-to-b from-zinc-50/0 via-zinc-50/40 to-zinc-50 dark:from-zinc-950/0 dark:via-zinc-950/40 dark:to-zinc-950"
+        className="absolute inset-0 pointer-events-none bg-linear-to-b from-zinc-50/0 via-zinc-50/40 to-zinc-50 dark:from-zinc-950/0 dark:via-zinc-950/40 dark:to-zinc-950"
       />
 
       {/* ── Content ── */}
@@ -246,7 +246,7 @@ export default function Hero({ personalInfo, socialLinks }: HeroProps) {
 
             <motion.div
               variants={itemVariants}
-              className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-lg mb-10 min-h-[3.5rem]"
+              className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-lg mb-10 min-h-14"
             >
               <TypingCatchphrase text={personalInfo.catchphrase} />
             </motion.div>
