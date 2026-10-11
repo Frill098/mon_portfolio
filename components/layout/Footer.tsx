@@ -58,7 +58,7 @@ export default function Footer() {
         </p>
         <p className="mt-2 text-xs text-center">
           <Link
-            href="/mentions-legales/"
+            href="/mentions-legales"
             className="text-zinc-500 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-violet-400 underline underline-offset-2"
           >
             Mentions légales

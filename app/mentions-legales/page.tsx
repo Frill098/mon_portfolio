@@ -6,7 +6,7 @@ import { APP_CONFIG } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Mentions légales",
   description: "Mentions légales et politique de confidentialité du portfolio.",
-  alternates: { canonical: `${APP_CONFIG.site.url}/mentions-legales/` },
+  alternates: { canonical: `${APP_CONFIG.site.url}/mentions-legales` },
 };
 
 const { author, email } = APP_CONFIG.site;

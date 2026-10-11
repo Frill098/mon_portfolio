@@ -65,7 +65,7 @@ export const contactFormConfig = {
   privacyNotice: {
     text: 'Vos données servent uniquement à vous répondre. En savoir plus dans les',
     linkLabel: 'mentions légales',
-    href: '/mentions-legales/',
+    href: '/mentions-legales',
   },
   successMessage: 'Message envoyé ! Je vous répondrai dans les plus brefs délais.',
   errorMessage: 'Une erreur est survenue. Veuillez réessayer ou me contacter directement.',
