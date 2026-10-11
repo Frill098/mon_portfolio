@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, AlertCircle } from "lucide-react";
 import { ContactMethod } from "@/lib/types";
@@ -20,6 +21,7 @@ interface ContactProps {
       message: { label: string; placeholder: string; required: boolean; minLength: number; maxLength: number };
     };
     submitText: string;
+    privacyNotice: { text: string; linkLabel: string; href: string };
     successMessage: string;
     errorMessage: string;
   };
@@ -53,6 +55,7 @@ export default function Contact({ invitation, contactMethods, formConfig }: Cont
   const [errors, setErrors]       = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
   const validate = (): boolean => {
     if (!formConfig) return false;
@@ -84,13 +87,18 @@ export default function Contact({ invitation, contactMethods, formConfig }: Cont
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    // Honeypot rempli = robot : on simule un succès sans rien envoyer
+    if (honeypotRef.current?.value) {
+      setSubmitStatus("success");
+      return;
+    }
     setIsSubmitting(true);
     setSubmitStatus("idle");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, _gotcha: "" }),
       });
       if (!res.ok) throw new Error();
       setSubmitStatus("success");
@@ -165,6 +173,15 @@ export default function Contact({ invitation, contactMethods, formConfig }: Cont
                     Envoyez-moi un message
                   </h3>
                   <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                    <input
+                      ref={honeypotRef}
+                      type="text"
+                      name="_gotcha"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      className="hidden"
+                    />
 
                     {/* Name */}
                     <div>
@@ -264,6 +281,16 @@ export default function Contact({ invitation, contactMethods, formConfig }: Cont
                       <Send className="w-4 h-4" aria-hidden="true" />
                       {isSubmitting ? "Envoi en cours…" : formConfig.submitText}
                     </Button>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 text-center">
+                      {formConfig.privacyNotice.text}{" "}
+                      <Link
+                        href={formConfig.privacyNotice.href}
+                        className="underline underline-offset-2 hover:text-violet-600 dark:hover:text-violet-400"
+                      >
+                        {formConfig.privacyNotice.linkLabel}
+                      </Link>
+                      .
+                    </p>
                   </form>
                 </div>
               </motion.div>
