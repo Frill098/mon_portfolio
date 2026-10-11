@@ -50,6 +50,9 @@ export default function Navigation() {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       setCurrentActiveSection(id);
       setIsMenuOpen(false);
+    } else {
+      // Section absente (ex. page mentions légales) : retour à l'accueil sur l'ancre
+      window.location.assign(`/${href}`);
     }
   };
 

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { APP_CONFIG } from "@/lib/constants";
 import { socialLinks } from "@/data/personal";
 import { SocialIcon } from "@/components/ui/SocialIcon";
@@ -54,6 +55,14 @@ export default function Footer() {
 
         <p className="text-sm text-zinc-500 dark:text-zinc-400 text-center">
           © {new Date().getFullYear()} Déo-Gratias DAGA — Tous droits réservés - Cotonou, Bénin
+        </p>
+        <p className="mt-2 text-xs text-center">
+          <Link
+            href="/mentions-legales/"
+            className="text-zinc-500 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-violet-400 underline underline-offset-2"
+          >
+            Mentions légales
+          </Link>
         </p>
       </div>
     </footer>
