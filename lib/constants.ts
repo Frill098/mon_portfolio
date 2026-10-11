@@ -5,7 +5,7 @@ export const APP_CONFIG: AppConfig = {
     name: "Déo-Gratias DAGA — Portfolio",
     description:
       "Portfolio de Déo-Gratias DAGA, Tech Lead & Développeur Full Stack spécialisé Laravel, React et Next.js. Basé au Bénin, disponible pour missions freelance.",
-    url: "https://deo-daga.dev",
+    url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001",
     author: "Déo-Gratias DAGA",
     email: "dagadeogratias@gmail.com",
     ogImage: "/images/og-image.jpg",

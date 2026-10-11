@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
+// URL publique : NEXT_PUBLIC_SITE_URL si définie, sinon domaine de production fourni par Vercel au build
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3001");
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  env: {
+    NEXT_PUBLIC_SITE_URL: siteUrl.replace(/\/+$/, ""),
+  },
   experimental: {
     optimizePackageImports: ["framer-motion", "lucide-react"],
   },
