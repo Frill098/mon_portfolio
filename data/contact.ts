@@ -16,7 +16,7 @@ export const contactMethods: ContactMethod[] = [
   {
     type: 'whatsapp',
     value: '+229 01 40 52 91 37',
-    url: 'https://wa.me/22901405291370',
+    url: 'https://wa.me/2290140529137?text=' + encodeURIComponent("Bonjour, j'ai vu votre portfolio et je souhaite échanger avec vous."),
   },
   {
     type: 'linkedin',
