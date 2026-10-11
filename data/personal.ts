@@ -4,7 +4,7 @@ export const personalInfo: PersonalInfo = {
   fullName: "Déo-Gratias DAGA",
   role: "Tech Lead · Développeur Full Stack",
   catchphrase: "Je conçois, je pilote, je livre — de l'idée au produit en production.",
-  avatar: "/images/Avatar.png",
+  avatar: "/images/avatar.webp",
   cvUrl: "/cv/CV_Deo-Gratias_DAGA_Dev.pdf",
 };
 
