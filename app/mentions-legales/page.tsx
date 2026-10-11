@@ -11,8 +11,7 @@ export const metadata: Metadata = {
 
 const { author, email } = APP_CONFIG.site;
 
-// TODO(user): définir la durée de conservation des messages reçus via le formulaire
-const RETENTION_PERIOD = "[À DÉFINIR]";
+const RETENTION_PERIOD = "30 jours à compter de leur réception, puis suppression";
 
 const sections = [
   {
